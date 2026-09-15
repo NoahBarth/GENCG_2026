@@ -1,0 +1,313 @@
+name: Deploy Quartz
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+
+jobs:
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+
+      # --------------------------------------------------------
+      # 1. CHECKOUT STUDENT VAULT
+      # --------------------------------------------------------
+
+      - name: Checkout vault
+        uses: actions/checkout@v6
+        with:
+          path: vault
+          fetch-depth: 0
+
+
+      # --------------------------------------------------------
+      # 2. CHECKOUT QUARTZ
+      # --------------------------------------------------------
+
+      - name: Checkout Quartz v5
+        uses: actions/checkout@v6
+        with:
+          repository: jackyzha0/quartz
+          ref: v5
+          path: quartz
+
+
+      # --------------------------------------------------------
+      # 3. NODE
+      # --------------------------------------------------------
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          package-manager-cache: false
+
+
+      # --------------------------------------------------------
+      # 4. COPY VAULT CONTENT
+      #
+      # Quartz processes Markdown and normal assets.
+      #
+      # Standalone creative-code sketch folders bypass Quartz
+      # because their filenames and directory structure must
+      # remain untouched.
+      # --------------------------------------------------------
+
+      - name: Copy vault into Quartz
+        run: |
+          rm -rf quartz/content
+          mkdir -p quartz/content
+
+          rsync -av \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='.obsidian/' \
+            --exclude='.trash/' \
+            --exclude='quartz.config.yaml' \
+            --exclude='quartz-plugins/' \
+            --exclude='weeks/*/sketches/' \
+            vault/ quartz/content/
+
+
+      # --------------------------------------------------------
+      # 5. QUARTZ CONFIG
+      #
+      # The repository owns quartz.config.yaml.
+      #
+      # GitHub Pages project URLs are derived automatically from:
+      #
+      # owner/repository
+      #
+      # Example:
+      #
+      # alice/my-journal
+      #
+      # ->
+      #
+      # alice.github.io/my-journal
+      # --------------------------------------------------------
+
+      - name: Configure Quartz
+        run: |
+          cp vault/quartz.config.yaml quartz/quartz.config.yaml
+
+          OWNER="${GITHUB_REPOSITORY%%/*}"
+          REPO="${GITHUB_REPOSITORY#*/}"
+
+          if [ "$REPO" = "$OWNER.github.io" ]; then
+            BASE_URL="$OWNER.github.io"
+          else
+            BASE_URL="$OWNER.github.io/$REPO"
+          fi
+
+          sed -i \
+            "s|__BASE_URL__|$BASE_URL|" \
+            quartz/quartz.config.yaml
+
+          echo "Quartz base URL: $BASE_URL"
+
+
+      # --------------------------------------------------------
+      # 6. OBSIDIAN HTML EMBEDS
+      #
+      # Obsidian:
+      #
+      # ![[./sketches/01-test/index.html]]
+      #
+      # becomes:
+      #
+      # <iframe src="./sketches/01-test/index.html"></iframe>
+      #
+      # Optional size:
+      #
+      # ![[./sketches/01-test/index.html|800x500]]
+      #
+      # Also accepts:
+      #
+      # ![](./sketches/01-test/index.html)
+      # --------------------------------------------------------
+
+      # - name: Convert Obsidian HTML embeds
+      #   run: |
+      #     python3 <<'PY'
+      #     from pathlib import Path
+      #     import re
+
+
+      #     wiki_pattern = re.compile(
+      #         r'!\[\[([^\]|]+\.html)(?:\|(\d+)x(\d+))?\]\]'
+      #     )
+
+      #     markdown_pattern = re.compile(
+      #         r'!\[\]\(<?([^)>]+\.html)>?\)'
+      #     )
+
+
+      #     def iframe(src, width="100%", height="600"):
+      #         return (
+      #             f'<iframe src="{src}" '
+      #             f'width="{width}" '
+      #             f'height="{height}" '
+      #             f'loading="lazy" '
+      #             f'sandbox="allow-scripts"></iframe>'
+      #         )
+
+
+      #     def convert_wiki(match):
+      #         src = match.group(1)
+
+      #         width = match.group(2) or "100%"
+      #         height = match.group(3) or "600"
+
+      #         if not src.startswith((".", "/")):
+      #             src = "./" + src
+
+      #         return iframe(src, width, height)
+
+
+      #     def convert_markdown(match):
+      #         src = match.group(1).strip()
+      #         return iframe(src)
+
+
+      #     for file in Path("quartz/content").rglob("*.md"):
+
+      #         text = file.read_text(encoding="utf-8")
+
+      #         updated = wiki_pattern.sub(
+      #             convert_wiki,
+      #             text,
+      #         )
+
+      #         updated = markdown_pattern.sub(
+      #             convert_markdown,
+      #             updated,
+      #         )
+
+      #         if updated != text:
+
+      #             print(
+      #                 f"Converted HTML embeds in {file}"
+      #             )
+
+      #             file.write_text(
+      #                 updated,
+      #                 encoding="utf-8",
+      #             )
+      #     PY
+
+      # --------------------------------------------------------
+      # 7. COPY LOCAL QUARTZ PLUGINS
+      # --------------------------------------------------------
+      - name: Copy local Quartz plugins
+        run: |
+          rm -rf quartz/quartz-plugins
+          cp -R vault/quartz-plugins quartz/quartz-plugins
+
+      # --------------------------------------------------------
+      # 8. INSTALL QUARTZ + CONFIGURED PLUGINS
+      #
+      # --from-config installs things such as the Excalidraw
+      # Quartz plugin declared in quartz.config.yaml.
+      # --------------------------------------------------------
+
+      - name: Install Quartz
+        working-directory: quartz
+        run: |
+          npm ci
+          npx quartz plugin install --clean
+          npx quartz plugin install --from-config
+
+
+      # --------------------------------------------------------
+      # 9. BUILD
+      # --------------------------------------------------------
+
+      - name: Build Quartz
+        working-directory: quartz
+        run: |
+          npx quartz build
+
+
+      # --------------------------------------------------------
+      # 10. COPY STANDALONE SKETCHES
+      #
+      # These bypass Quartz so that:
+      #
+      # index.html
+      # sketch.js
+      # style.css
+      # shaders
+      # json
+      # wasm
+      # images
+      # etc.
+      #
+      # remain unchanged.
+      # --------------------------------------------------------
+
+      - name: Copy standalone sketches
+        run: |
+          if [ -d vault/weeks ]; then
+
+            find vault/weeks \
+              -type d \
+              -name sketches \
+              -print0 | \
+
+            while IFS= read -r -d '' dir; do
+
+              rel="${dir#vault/}"
+
+              mkdir -p \
+                "quartz/public/$rel"
+
+              rsync -av \
+                "$dir/" \
+                "quartz/public/$rel/"
+
+            done
+
+          fi
+
+
+      # --------------------------------------------------------
+      # 11. GITHUB PAGES
+      # --------------------------------------------------------
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: quartz/public
+
+
+      # --------------------------------------------------------
+      # 12. DEPLOY
+      # --------------------------------------------------------
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v5
