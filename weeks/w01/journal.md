@@ -18,11 +18,12 @@ publish: true
 ## Evidence checklist
 
 Keep evidence of the process, not only the successful result.
+This is added to check functionality of GitHub
 
-- [ ] Original drawing or idea
-- [ ] First instruction set
-- [ ] First execution by another person
-- [ ] Moments of confusion or ambiguity
+- [x] Original drawing or idea
+- [x] First instruction set
+- [x] First execution by another person
+- [x] Moments of confusion or ambiguity
 - [ ] Revised instructions
 - [ ] Second execution
 - [ ] Small rule system
