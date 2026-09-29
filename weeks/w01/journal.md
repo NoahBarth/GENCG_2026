@@ -9,9 +9,6 @@ tags:
 publish: true
 ---
 
-> [!important] Complete this week's exercises and reflections yourself
-> Lesson 01 is a **Human-only** session: do not use generative AI to invent rules, write or debug the p5.js exercise, or write your process notes. This page is only a structure for documenting your own work.
-
 - [Lesson 01: Instructions & Systems](https://digitalideation.github.io/gencg_h2601/lessons/lesson01_intro/)
 - [Journal guidelines](https://github.com/digitalideation/gencg_h2601/blob/refactor_2026/lessons/extra/journal.md)
 
@@ -26,7 +23,6 @@ This is added to check functionality of GitHub
 - [x] Moments of confusion or ambiguity
 - [ ] Revised instructions
 - [ ] Second execution
-- [ ] Small rule system
 - [ ] Sketch or diagram of the system
 - [ ] p5.js translation
 
@@ -40,59 +36,75 @@ This is added to check functionality of GitHub
 
 **Original idea**
 
-<!-- Add your drawing and a short description. -->
+![[Pasted image 20260922153254.png|425]]
 
 **First instruction set**
 
-1.
-2.
-3.
-4.
-5.
-6.
+1. Create a point in the Center of the Paper.
+2. Draw a second and third dot on the paper and connect those to create a somewhat even triangle.
+3. Extend the last line through the center and increase the distance.
+4. Add two more points, connect them and run the last line through the center again, with increased distance.
+5. Rinse and repeat.
 
-**First execution**
+**First executions**
 
-<!-- Embed or link the result produced by your partner. -->
+![[Pasted image 20260922153446.png|380]]
+Sketch created by Daniel Barot
+
+![[Pasted image 20260922154516.png|379]]
+Sketch created by Felix Steiner
 
 **Where did interpretation differ?**
 
--
--
+- The dots which were drawn on different spots or not at all
+- The lines were not allways linear and had different goals
 
-**Revised instructions**
-
-1.
-2.
-3.
-4.
-5.
-6.
-
-**Second execution**
-
-<!-- Embed or link the second result. What changed? -->
-
-### Small rule system
-
-- **Starting condition:**
-- **Action:**
-- **Relationship:**
-- **Variation:**
-- **Constraint:**
-- **Stopping rule:**
-
-<!-- Add a sketch or diagram of the system. -->
+**Conclusion**
+The instructions were to unclear to properly replicate the original Idea. Some parts may still be recognizable from the Original design.
 
 ### Human → Computer
 
+![[./sketches/01-test/index.html]]
+
 What did a human understand automatically that the computer needed you to specify?
 
--
+- simple forms
+- continuous instructions
 -
 
 ```js
 // Add your own p5.js translation here.
+createCanvas(windowWidth, windowHeight);
+
+angleMode(DEGREES);
+
+background(244, 243, 239);
+
+currentX = windowHeight / 2;
+
+currentY = windowWidth / 2;
+
+line(currentX, currentY, (currentX += 20), (currentY += 20));
+
+line(currentX, currentY, (currentX -= 20), (currentY += 5));
+
+line(currentX, currentY, currentX, (currentY -= 60));
+
+line(currentX, currentY, (currentX -= 35), (currentY += 35));
+
+line(currentX, currentY, (currentX += 120), currentY);
+
+line(currentX, currentY, (currentX -= 50), (currentY += 80));
+
+line(currentX, currentY, (currentX -= 90), (currentY -= 200));
+
+line(currentX, currentY, (currentX += 200), (currentY += 80));
+
+line(currentX, currentY, (currentX -= 400), (currentY += 110));
+
+line(currentX, currentY, (currentX += 80), (currentY -= 280));
+
+line(currentX, currentY, (currentX += 175), (currentY += 210));
 ```
 
 **Parameters tested**
