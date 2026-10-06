@@ -19,7 +19,7 @@ In this week i tried to add Motion to the Sketches i create
 
 ### Human → Computer
 
-![[./sketches/index.html]]
+![[weeks/w03/sketches/index.html]]
 
 As an Initial Design i tried to create lines which generate waves over time. This didn't seem to quite work out as intended, but still made for an interesting Piece, with waves of lines slowly going up and down the screen
 

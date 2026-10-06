@@ -21,10 +21,10 @@ This is added to check functionality of GitHub
 - [x] First instruction set
 - [x] First execution by another person
 - [x] Moments of confusion or ambiguity
-- [ ] Revised instructions
-- [ ] Second execution
-- [ ] Sketch or diagram of the system
-- [ ] p5.js translation
+- [x] Revised instructions
+- [x] Second execution
+- [x] Sketch or diagram of the system
+- [x] p5.js translation
 
 <!-- Add images to ./sketches/ and embed them like this:
 ![[./sketches/your-file-name.jpg]]

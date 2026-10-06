@@ -2,8 +2,8 @@ function setup() {
   createCanvas(windowWidth, windowHeight)
   angleMode(DEGREES)
   background(244, 243, 239)
-  currentX = windowHeight/2
-  currentY = windowWidth/2
+  currentX = windowHeight
+  currentY = windowWidth
   line(currentX, currentY, currentX+=20, currentY+=20)
   line(currentX, currentY, currentX-=20, currentY+=5)
   line(currentX, currentY, currentX, currentY-=60)
@@ -16,11 +16,6 @@ function setup() {
   line(currentX, currentY, currentX+=80, currentY-=280)
   line(currentX, currentY, currentX+=175, currentY+=210)
 }
-
-function draw() {
-  
-}
-
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight)
