@@ -15,7 +15,8 @@ In this week i tried to add Motion to the Sketches i create
 
 ### Human Concepts
 
-
+![[Pasted image 20261006174055.png]]
+As an first draft was the idea to morph and change lines
 
 ### Human → Computer
 
