@@ -11,18 +11,18 @@ publish: true
 
 ## Week 2
 
-In this week i tried to add Motion to the Sketches i create
+In this week i tried to add Motion to the Sketches i create. The Goal was to introduce changes overtime to the canvas, which signify the passing of time in the real world.
 
 ### Human Concepts
 
 ![[Pasted image 20261006174055.png]]
-As an first draft was the idea to morph and change lines
+As an first draft was the idea to morph and change lines. Those Changes should oscillate back and forth to morph the structure i created. The base idea was given to me by daniel barot, who created a similar end-product based on our talks.
 
 ### Human → Computer
 
 ![[./sketches/index.html]]
 
-As an Initial Design i tried to create lines which generate waves over time. This didn't seem to quite work out as intended, but still made for an interesting Piece, with waves of lines slowly going up and down the screen
+As an Initial Design i tried to create lines which generate waves over time. This didn't seem to quite work out as intended, but still made for an interesting Piece, with waves of lines slowly going up and down the screen. It looked almost like the tides on a beach, going up and down the sands
 
 Here the final code which led to the implementation above
 
@@ -68,4 +68,4 @@ function windowResized() {
 
 ## Reflection
 
-Keep the system small until the weekly writing practice makes further needs clear.
+While i was happy with the final result i may could iterated more over it, create different versions and increase the complexity for more interesting results. It also took me a bit longer than expected, which is probably a result of rusty p5.js skills. I'm still happy with the final result and would like to create more pieces in this direction...
