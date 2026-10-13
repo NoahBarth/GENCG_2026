@@ -5,7 +5,7 @@ week: 1
 tags:
   - workflow
   - experiment
-publish: true
+publish: false
 ---
 
 Foundation week: setting up the journal and confirming the publishing workflow.

@@ -9,7 +9,7 @@ tags:
 publish: true
 ---
 
-## Week 4
+## Week 3
 
 In this week i created a "beautiful Corpse" in collaboration with Daniel Barot.
 

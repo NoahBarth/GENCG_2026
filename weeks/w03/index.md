@@ -5,7 +5,7 @@ week: 1
 tags:
   - workflow
   - experiment
-publish: true
+publish: false
 ---
 
 Continue working on the journal and experiments
