@@ -30,3 +30,5 @@ https://www.christies.com/en/stories/ai-and-generative-art-collecting-guide-998d
 Unstructured Creations may still be as interesting as the previous idea. Just an unknowable mess, without any rhyme or reason to it.
 
 ## Reflection
+
+As far as inspiration goes, i see a certain 3D direction in which i want to take this project. Maybe something which generates a certain bust or image on a preexisting model.
